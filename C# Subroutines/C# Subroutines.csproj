@@ -8,4 +8,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="WorldCountries.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="WorldCountries.csv" />
+  </ItemGroup>
+
 </Project>
