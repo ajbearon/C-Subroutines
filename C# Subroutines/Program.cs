@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 
 ///////////////
 // TASKS
@@ -12,10 +13,10 @@
 internal class Program
 {
     // QUESTION: Is Country a Record or a Tuple?
-        // Record - a composite data type containing multiple items of any type - mutable
-        // Tuple - An ordered set of values of any type - immutable
+    // Record - a composite data type containing multiple items of any type - mutable
+    // Tuple - An ordered set of values of any type - immutable
     // Critical thinking QUESTION: in C#, "readonly struct" is immutable.  Does that alter your answer above?
-    internal struct Country 
+    internal struct Country
     {
         public string Name;
         public int Population;
@@ -23,6 +24,17 @@ internal class Program
         public int Density;
     }
 
+    Country[] countries1 = new[] {
+        new Country { Name = "Afghanistan", Population = 42647492, LandArea = 652860, Density = 65 },
+        new Country { Name = "Albania", Population = 2791765, LandArea = 27400, Density = 102 }
+    };
+
+    static (string, int, int, int)[] countries2 = new[] {
+        (Name: "Afghanistan", 42647492, 652860, 65),
+        (Name: "Albania", 2791765, 27400, 102)
+    };
+
+    static string foo = countries2[1].Item1;
 
     // QUESTION: What is the scope of countriesData?
     // Hint: consider if it is Global or Local (or something else)
@@ -30,6 +42,7 @@ internal class Program
 
     private static void Main(string[] args)
     {
+        countries2[1].Item1 = "fdoo";
         ImportData();
 
         // TODO - 1. Ask the user to enter the name of a country
