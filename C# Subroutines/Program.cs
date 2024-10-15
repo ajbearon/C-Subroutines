@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 
 ///////////////
 // TASKS
@@ -13,7 +12,7 @@ using System.Reflection;
 internal class Program
 {
     // QUESTION: Is Country a Record or a Tuple?
-    // Record - a composite data type containing multiple items of any type - mutable
+    // Record - An ordered set of values of any type - mutable
     // Tuple - An ordered set of values of any type - immutable
     // Critical thinking QUESTION: in C#, "readonly struct" is immutable.  Does that alter your answer above?
     internal struct Country
@@ -24,25 +23,12 @@ internal class Program
         public int Density;
     }
 
-    Country[] countries1 = new[] {
-        new Country { Name = "Afghanistan", Population = 42647492, LandArea = 652860, Density = 65 },
-        new Country { Name = "Albania", Population = 2791765, LandArea = 27400, Density = 102 }
-    };
-
-    static (string, int, int, int)[] countries2 = new[] {
-        (Name: "Afghanistan", 42647492, 652860, 65),
-        (Name: "Albania", 2791765, 27400, 102)
-    };
-
-    static string foo = countries2[1].Item1;
-
     // QUESTION: What is the scope of countriesData?
     // Hint: consider if it is Global or Local (or something else)
     static List<Country> countriesData = new List<Country>();
 
     private static void Main(string[] args)
     {
-        countries2[1].Item1 = "fdoo";
         ImportData();
 
         // TODO - 1. Ask the user to enter the name of a country
@@ -53,6 +39,7 @@ internal class Program
 
     }
 
+    // QUESTION: is FindPopulation a function or procedure
     /// <summary>
     /// Linear Search through countriesData to find the population
     /// </summary>
@@ -72,31 +59,39 @@ internal class Program
         return -1;
     }
 
+
+    // QUESTION: is ImportData a function or procedure
     private static void ImportData()
     {
         // QUESTION: What is the scope of assembly?
         var assembly = Assembly.GetExecutingAssembly();
         const string resourceName = "C__Subroutines.WorldCountries.csv";
 
-        using (var reader = new StreamReader(assembly.GetManifestResourceStream(resourceName)))
-        {
-            // Skip the 1st line because it contains headers
-            reader.ReadLine();
+        var resourceStream = assembly.GetManifestResourceStream(resourceName);
+        if (resourceStream == null) { throw new ApplicationException("Build error; resource file missing."); }
 
-            while (!reader.EndOfStream)
+        using var reader = new StreamReader(resourceStream);
+
+        // Skip the 1st line because it contains headers
+        reader.ReadLine();
+
+        while (true)
+        {
+            // QUESTION: What is the scope of line?
+            var line = reader.ReadLine();
+
+            // Reached end of file so we're done
+            if (line == null) { return; }
+
+            string[] values = line.Split(',');
+            Country country = new Country()
             {
-                // QUESTION: What is the scope of line?
-                string line = reader.ReadLine();
-                string[] values = line.Split(',');
-                Country country = new Country()
-                {
-                    Name = values[0],
-                    Population = int.Parse(values[1]),
-                    LandArea = int.Parse(values[2]),
-                    Density = int.Parse(values[3])
-                };
-                countriesData.Add(country);
-            }
+                Name = values[0],
+                Population = int.Parse(values[1]),
+                LandArea = int.Parse(values[2]),
+                Density = int.Parse(values[3])
+            };
+            countriesData.Add(country);
         }
     }
 }
